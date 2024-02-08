@@ -1,0 +1,55 @@
+- name: Download Docker repo GPG key
+  remote_user: root
+  get_url:
+    url: "https://download.docker.com/linux/ubuntu/gpg"
+    dest: "/tmp/docker-archive-keyring.gpg"
+  tags:
+    - docker
+- name: Install Docker repo GPG key
+  remote_user: root
+  shell:
+    cat /tmp/docker-archive-keyring.gpg| gpg --yes --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+  tags:
+    - docker
+- name: Remove Docker repo GPG key file
+  remote_user: root
+  file:
+    path: "/tmp/docker-archive-keyring.gpg"
+    state: absent
+  tags:
+    - docker
+- name: Get architecture
+  remote_user: root
+  command: dpkg --print-architecture
+  register: architecture
+- name: Get release codename
+  remote_user: root
+  command: lsb_release -cs
+  register: release_codename
+- name: Add Docker repo
+  remote_user: root
+  lineinfile:
+    path: "/etc/apt/sources.list.d/docker.list"
+    line: "deb [arch={{ architecture.stdout }} signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu {{ release_codename.stdout }} stable"
+    regexp: "^deb \\[arch={{ architecture.stdout }} signed-by=/usr/share/keyrings/docker-archive-keyring.gpg\\] https://download.docker.com/linux/ubuntu {{ release_codename.stdout }} stable$"
+    create: yes
+  tags:
+    - docker
+    - apt
+- name: Install Docker
+  remote_user: root
+  apt:
+    pkg:
+      - docker-ce
+    state: latest
+    update_cache: true
+  tags:
+    - docker
+    - apt
+- name: Enable Docker service
+  remote_user: root
+  systemd:
+    name: docker
+    enabled: yes
+  tags:
+    - docker
