@@ -1,0 +1,15 @@
+- name: Install NVM if not already installed
+  remote_user: root
+  shell: |
+    if [ ! -f "/root/.nvm/nvm.sh" ]; then
+      curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
+    fi
+  tags:
+    - node
+- name: Install Node.js
+  remote_user: root
+  shell: source /root/.nvm/nvm.sh && nvm install {{ node_version }}
+  args:
+    executable: /bin/bash
+  tags:
+    - node
