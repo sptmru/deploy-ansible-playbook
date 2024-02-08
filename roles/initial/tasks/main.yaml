@@ -1,0 +1,21 @@
+- name: Update APT cache and install available updates
+  remote_user: root
+  apt:
+    upgrade: yes
+    update_cache: yes
+  tags:
+    - system
+    - apt
+- name: Install basic dependencies
+  remote_user: root
+  apt:
+    pkg:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - software-properties-common
+    state: latest
+    update_cache: true
+  tags:
+    - system
+    - apt
