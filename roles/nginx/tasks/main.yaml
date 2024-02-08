@@ -1,0 +1,40 @@
+- name: Install Nginx and Snapd
+  remote_user: root
+  apt:
+    pkg:
+      - nginx
+      - snapd
+    state: latest
+    update_cache: true
+  tags:
+    - nginx
+    - apt
+- name: Remove Certbot if exists
+  remote_user: root
+  apt:
+    name: certbot
+    state: absent
+  tags:
+    - certbot
+    - apt
+- name: Install Snap core
+  remote_user: root
+  community.general.snap:
+    name:
+      - core
+  tags:
+    - snap
+- name: Install Certbot
+  remote_user: root
+  community.general.snap:
+    name: certbot
+    classic: true
+  tags:
+    - snap
+    - certbot
+- name: Create symbolic link for certbot
+  remote_user: root
+  file:
+    src: /snap/bin/certbot
+    dest: /usr/bin/certbot
+    state: link
