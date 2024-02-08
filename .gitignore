@@ -1,0 +1,27 @@
+# General
+.DS_Store
+Thumbs.db
+[Dd]esktop.ini
+$RECYCLE.BIN
+*~
+.directory
+.Trash-*
+.nfs*
+
+# IDE
+.idea
+.vs
+.vscode
+
+# Ansible
+*.retry
+
+# Ansible-lint
+.python-version
+ansible-lint-venv
+
+# Ansible
+inventory-local.yaml
+playbook-local.yaml
+collections/*
+```
