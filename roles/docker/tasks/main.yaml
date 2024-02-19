@@ -53,6 +53,14 @@
     enabled: yes
   tags:
     - docker
+- name: Create Docker plugins directory
+  remote_user: root
+  file:
+    path: /root/.docker/cli-plugins
+    state: directory
+    recurse: yes
+  tags:
+    - docker
 - name: Install docker-compose
   remote_user: root
   get_url:
